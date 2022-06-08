@@ -60,7 +60,7 @@ router.put('/:codD',controlValidar(actualizarDocenteSchema,'body'), async (req, 
     }
 })
 
-router.patch('/editarContrasenia/:codD', async (req, res, next) => {
+router.patch('/:codD', async (req, res, next) => {
   try {
 
     const {codD} = req.params
