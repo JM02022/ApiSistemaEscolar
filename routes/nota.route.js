@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get('/',async (req,res,next)=>{
   try {
-    const notas = await servicioNotas.findAll();
+    const notas = await servicioNota.findAll();
     res.status(200).json(notas);
   } catch (error) {
     next(error)
@@ -19,7 +19,7 @@ router.get('/',async (req,res,next)=>{
 router.get('/:codN',controlValidar(findByNotaSchema,'params'),async(req,res,next)=>{
   try {
     const {codN} = req.params
-    const nota = await servicioNotas.findBy(codN)
+    const nota = await servicioNota.findBy(codN)
     res.status(200).json(nota)
 
   } catch (error) {

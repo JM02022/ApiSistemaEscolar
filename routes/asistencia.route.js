@@ -52,7 +52,7 @@ router.patch('/:codAs',controlValidar(actualizarAsistenciaSchema,'body'), async 
       codAs: codAs,
       ...req.body
     }
-    const asistencia = await servicioAsistencias.update(codAs,body)
+    const asistencia = await servicioAsistencias.updateParcial(codAs,body)
     res.status(200).json({
       mensaje: 'Asistencia modificada',
       datos: asistencia

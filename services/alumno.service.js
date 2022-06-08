@@ -52,7 +52,7 @@ class AlumnoServices {
       ...alumno,
       ...alumnoParcial
     }
-    return this.notas[posAlumno]
+    return this.alumnos[posAlumno]
   }
 
   async delete(id) {
