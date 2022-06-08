@@ -1,61 +1,85 @@
-const faker = require("faker")
+const faker = require("faker");
+const boom = require('@hapi/boom');
+
 class AdministradorServices {
-    constructor() {
-        this.administradores = [];
-        this.generarDatos()
+  constructor() {
+    this.administradores = [];
+    this.generarDatos()
+  }
+  generarDatos() {
+    const limite = 5;
+    const arr = ["M", "F"]
+    for (let i = 0; i < limite; i++) {
+      var aleatorio = Math.floor(Math.random() * arr.length)
+      this.administradores.push({
+        idAdmi: faker.datatype.uuid(),
+        contrasenia: faker.internet.password(),
+        apellidoP: faker.name.lastName(),
+        apellidoM: faker.name.lastName(),
+        nombreAd: faker.name.firstName(),
+        dni: (Math.floor(Math.random() * (999999999 - 400000000)) + 400000000).toString() ,
+        sexoAd: arr[aleatorio],
+        celular: (Math.floor(Math.random() * (999999999 - 400000000)) + 400000000).toString(),
+        direccion: faker.address.streetAddress(),
+        correo: faker.internet.email()
+      })
     }
-    generarDatos() {
-        const limite = 5;
-        const arr = ["M", "F"]
-        for (let i = 0; i < limite; i++) {
-            var aleatorio = Math.floor(Math.random() * arr.length)
-            this.administradores.push({
-                codA: faker.datatype.uuid(),
-                nombreA: faker.name.firstName(),
-                apellidoPA: faker.name.lastName(),
-                apellidoMA: faker.name.lastName(),
-                celularA: faker.phone.phoneNumber(),
-                usuarioA: faker.internet.userName(),
-                contraseniaA: faker.internet.password(),
-                DniA: Math.floor(Math.random() * (99999999 - 40000000)) + 40000000,
-                fechaNaciA: faker.datatype.datetime(),
-                sexoA: arr[aleatorio],
-                direccionA: faker.address.streetAddress(),
-            });
-        }
-    }
+  }
 
-    create(administrador) {
-        administrador.codA = faker.datatype.uuid();
-        this.administradores.push(administrador)
+  async create(administrador) {
+    let nuevoAdministrador = {
+      idAdmi: faker.datatype.uuid(),
+      ...administrador
     }
+    this.administradores.push(nuevoAdministrador)
+    return nuevoAdministrador
+  }
 
-    update(id, administrador) {
-        const AdministradorActualizar = this.findBy(id);
-        if (AdministradorActualizar != undefined) {
-            AdministradorActualizar.nombreA = administrador.nombreA;
-            AdministradorActualizar.apellidoPA = administrador.apellidoPA;
-            AdministradorActualizar.apellidoMA = administrador.apellidoMA;
-            AdministradorActualizar.celularA = administrador.celularA;
-            AdministradorActualizar.usuarioA = administrador.usuarioA;
-            AdministradorActualizar.DniA = administrador.usuarioA;
-            AdministradorActualizar.fechaNaciA = administrador.fechaNaciA;
-            AdministradorActualizar.sexoA = administrador.usuarioA;
-            AdministradorActualizar.direccionA = administrador.usuarioA;
-        }
+  async update(id, administrador) {
+    const posAdmin = this.administradores.findIndex(item => item.idAdmi == id)
+    if (posAdmin === -1) {
+      throw boom.notFound("No se encuentra el administrador")
     }
+    this.administradores[posAdmin] = administrador
+    return this.administradores[posAdmin]
+  }
 
-    delete(id) {
-        this.administradores.splice(this.administradores.indexOf(this.findBy(id)), 1)
+  async updateParcial(id, adminParcial) {
+    const posAdmin = this.administradores.findIndex(item => item.idAdmi == id)
+    if (posAdmin === -1) {
+      throw boom.notFound("No se encuentra el administrador")
     }
+    const admin = this.administradores[posAdmin]
+    this.administradores[posAdmin] = {
+      ...admin,
+      ...adminParcial
+    }
+    return this.administradores[posAdmin]
+  }
 
-    findAll() {
-        return this.administradores
+  async delete(id) {
+    const posAdmin = this.administradores.findIndex(item => item.idAdmi == id)
+    if (posAdmin === -1) {
+      throw boom.notFound("No se encuentra el administrador")
     }
+    this.administradores.splice(posAdmin, 1)
+    return {
+      mensaje: 'Se elimino administrador',
+      id
+    }
+  }
 
-    findBy(id) {
-        return this.administradores.find(element => element.codA == id)
+  async findAll() {
+    return this.administradores
+  }
+
+  async findBy(id) {
+    const administrador = this.administradores.find(item => item.idAdmi == id)
+    if (!administrador) {
+      throw boom.notFound("No se encuentra el administrador")
     }
+    return administrador
+  }
 }
 
 module.exports = AdministradorServices

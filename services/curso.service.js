@@ -1,44 +1,74 @@
-const faker = require("faker")
+const faker = require("faker");
+const boom = require('@hapi/boom');
 class CursoServices {
-    constructor() {
-        this.cursos = []
-        this.generarDatos()
+  constructor() {
+    this.cursos = []
+    this.generarDatos()
+  }
+  generarDatos() {
+    const limite = 10;
+    for (let i = 0; i < limite; i++) {
+      this.cursos.push({
+        codigoC: faker.datatype.uuid(),
+        nombre: faker.name.jobTitle(),
+        descripcion: faker.lorem.sentences(),
+        imagen: faker.image.abstract()
+      });
     }
-    generarDatos() {
-        const limite = 10;
-        for (let i = 0; i < limite; i++) {
-            this.cursos.push({
-                codigoC: faker.datatype.uuid(),
-                nombre: faker.name.jobTitle(),
-                descripcion: faker.lorem.sentences(),
-                imagen: faker.image.abstract()
-            });
-        }
+  }
+  async create(curso) {
+    let nuevoCurso = {
+      codigoC: faker.datatype.uuid(),
+      ...curso
     }
-    create(curso) {
-        curso.codigoC = faker.datatype.uuid();
-        this.cursos.push(curso)
+    this.cursos.push(nuevoCurso)
+    return nuevoCurso
+  }
+  async update(id, curso) {
+    const posCurso = this.cursos.findIndex(item => item.codigoC == id)
+    if (posCurso === -1) {
+      throw boom.notFound("No se encuentro curso")
     }
-    update(id, curso) {
-        const cursoUpdate = this.findBy(id)
-        if(cursoUpdate != undefined){
-            cursoUpdate.nombre = curso.nombre
-            cursoUpdate.descripcion = curso.descripcion
-            cursoUpdate.imagen = curso.imagen
-        }
-    }
+    this.cursos[posCurso] = curso
+    return this.cursos[posCurso]
+  }
 
-    delete(id) {
-        this.cursos.splice(this.cursos.indexOf(this.findBy(id)), 1)
+  async updateParcial(id, cursoParcial) {
+    const posCurso = this.cursos.findIndex(item => item.codigoC == id)
+    if (posCurso === -1) {
+      throw boom.notFound("No se encuentro curso")
     }
+    const curso = this.cursos[posCurso]
+    this.cursos[posCurso] = {
+      ...curso,
+      ...cursoParcial
+    }
+    return this.cursos[posCurso]
+  }
 
-    findAll() {
-        return this.cursos
+  async delete(id) {
+    const posCurso = this.cursos.findIndex(item => item.codigoC == id)
+    if (posCurso === -1) {
+      throw boom.notFound("No se encuentro curso")
     }
+    this.cursos.splice(posCurso, 1)
+    return {
+      mensaje: 'Se elimino curso',
+      id
+    }
+  }
 
-    findBy(id) {
-        return this.cursos.find(element => element.codigoC == id) //pepito
+  async findAll() {
+    return this.cursos
+  }
+
+  async findBy(id) {
+    const curso = this.cursos.find(item => item.codigoC == id)
+    if (!curso) {
+      throw boom.notFound("No se encuentro curso")
     }
+    return curso
+  }
 }
 
 module.exports = CursoServices

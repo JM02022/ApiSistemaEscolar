@@ -1,9 +1,11 @@
-const faker = require("faker")
+const faker = require("faker");
+const boom = require('@hapi/boom');
 class AlumnoServices {
   constructor() {
     this.alumnos = []
     this.generarDatos()
   }
+
   generarDatos() {
     const limite = 10;
     const arr = ["M", "F"]
@@ -11,49 +13,70 @@ class AlumnoServices {
       var aleatorio = Math.floor(Math.random() * arr.length)
       this.alumnos.push({
         codA: faker.datatype.uuid(),
-        usuarioA: faker.internet.userName(),
-        contraseniaA: faker.internet.password(),
-        DniA: Math.floor(Math.random() * (99999999 - 40000000)) + 40000000,
+        contrasenia: faker.internet.password(),
+        dni: Math.floor(Math.random() * (99999999 - 40000000)) + 40000000,
+        apellidoP: faker.name.lastName(),
+        apellidoM: faker.name.lastName(),
         nombreA: faker.name.firstName(),
-        apellidoPA: faker.name.lastName(),
-        apellidoMA: faker.name.lastName(),
         fechaNaciA: faker.datatype.datetime(),
         sexoA: arr[aleatorio],
-        direccionA: faker.address.streetSuffix(),
-        gradoA: Math.floor(Math.random() * (6 - 1)) + 1
+        direccion: faker.address.streetSuffix(),
       });
     }
   }
-  create(alumno) {
-    alumno.codA = faker.datatype.uuid();
-    this.alumnos.push(alumno)
+
+  async create(alumno) {
+    let nuevoAlumno = {
+      codA: faker.datatype.uuid(),
+      ...alumno
+    }
+    this.alumnos.push(nuevoAlumno)
+    return nuevoAlumno
   }
-  update(id, alumno) {
-    const AlumnoActualizar = this.findBy(id);
-    if (AlumnoActualizar != undefined) {
-      AlumnoActualizar.usuarioA = alumno.usuarioA;
-      AlumnoActualizar.contraseniaA = alumno.contraseniaA;
-      AlumnoActualizar.DniA = alumno.DniA;
-      AlumnoActualizar.nombreA = alumno.nombreA;
-      AlumnoActualizar.apellidoPA = alumno.apellidoPA;
-      AlumnoActualizar.apellidoMA = alumno.apellidoMA;
-      AlumnoActualizar.fechaNaciA = alumno.fechaNaciA;
-      AlumnoActualizar.sexoA = alumno.sexoA;
-      AlumnoActualizar.direccionA = alumno.direccionA;
-      AlumnoActualizar.gradoA = alumno.gradoA;
+  async update(id, alumno) {
+    const posAlumno = this.alumnos.findIndex(item => item.codA == id)
+    if (posAlumno === -1) {
+      throw boom.notFound("No se encuentra alumno")
+    }
+    this.alumnos[posAlumno] = alumno
+    return this.alumnos[posAlumno]
+  }
+
+  async updateParcial(id, alumnoParcial) {
+    const posAlumno = this.alumnos.findIndex(item => item.codA == id)
+    if (posAlumno === -1) {
+      throw boom.notFound("No se encuentra alumno")
+    }
+    const alumno = this.alumnos[posAlumno]
+    this.alumnos[posAlumno] = {
+      ...alumno,
+      ...alumnoParcial
+    }
+    return this.notas[posAlumno]
+  }
+
+  async delete(id) {
+    const posAlumno = this.alumnos.findIndex(item => item.codA == id)
+    if (posAlumno === -1) {
+      throw boom.notFound("No se encuentra alumno")
+    }
+    this.alumnos.splice(posAlumno, 1)
+    return {
+      mensaje: 'Se elimino alumno',
+      id
     }
   }
 
-  delete(id) {
-    this.alumnos.splice(this.alumnos.indexOf(this.findBy(id)), 1)
-  }
-
-  findAll() {
+  async findAll() {
     return this.alumnos
   }
 
-  findBy(id) {
-    return this.alumnos.find(element => element.codA == id)
+  async findBy(id) {
+    const alumno = this.alumnos.find(item => item.codA == id)
+    if (!alumno) {
+      throw boom.notFound("No se encuentra alumno")
+    }
+    return alumno
   }
 }
 

@@ -1,42 +1,73 @@
 const faker = require("faker")
+const boom = require('@hapi/boom');
+
 class AulaServices {
-    constructor() {
-        this.aulas = []
-        this.generarDatos()
+  constructor() {
+    this.aulas = []
+    this.generarDatos()
+  }
+  generarDatos() {
+    const limite = 10;
+    for (let i = 0; i < limite; i++) {
+      this.aulas.push({
+        codAu: faker.datatype.uuid(),
+        capacidadA: Math.floor(Math.random() * (40- 1)) + 1
+      });
     }
-    generarDatos() {
-        const limite = 10;
-        for (let i = 0; i < limite; i++) {
-            this.aulas.push({
-                codigoAu: faker.datatype.uuid(),
-                numero: faker.datatype.number(),
-                piso: faker.datatype.number()
-            });
-        }
+  }
+  async create(aula) {
+    let nuevaAula = {
+      codAu: faker.datatype.uuid(),
+      ...aula
     }
-    create(aula) {
-        aula.codigoAu = faker.datatype.uuid();
-        this.aulas.push(aula)
+    this.aulas.push(nuevaAula)
+    return nuevaAula
+  }
+  async update(id, aula) {
+    const posAula = this.aulas.findIndex(item => item.codAu== id)
+    if (posAula === -1) {
+      throw boom.notFound("No se encuentro aula")
     }
-    update(id, aula) {
-        const aulaUpdate = this.findBy(id)
-        if (aulaUpdate != undefined) {
-            aulaUpdate.numero = aula.numero
-            aulaUpdate.piso = aula.piso
-        }
-    }
+    this.aulas[posAula] = aula
+    return this.aulas[posAula]
+  }
 
-    delete(id) {
-        this.aulas.splice(this.aulas.indexOf(this.findBy(id)), 1)
+  async updateParcial(id, aulaParcial) {
+    const posAula = this.aulas.findIndex(item => item.codAu == id)
+    if (posAula === -1) {
+      throw boom.notFound("No se encuentro aula")
     }
+    const aula = this.aulas[posAula]
+    this.aulas[posAula] = {
+      ...aula,
+      ...aulaParcial
+    }
+    return this.aulas[posAula]
+  }
 
-    findAll() {
-        return this.aulas
+  async delete(id) {
+    const posAula = this.aulas.findIndex(item => item.codAu == id)
+    if (posAula === -1) {
+      throw boom.notFound("No se encuentro aula")
     }
+    this.aulas.splice(posAula, 1)
+    return {
+      mensaje: 'Se elimino aula',
+      id
+    }
+  }
 
-    findBy(id) {
-        return this.aulas.find(element => element.codigoAu === id) //pepito
+  async findAll() {
+    return this.aulas
+  }
+
+  async findBy(id) {
+    const aula = this.aulas.find(item => item.codAu == id)
+    if (!aula) {
+      throw boom.notFound("No se encuentro aula")
     }
+    return aula
+  }
 }
 
 module.exports = AulaServices

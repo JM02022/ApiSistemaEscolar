@@ -1,52 +1,74 @@
 const faker = require("faker")
+const boom = require('@hapi/boom');
 class AsistenciaServices {
-    constructor() {
-        this.asistencias = []
-        this.generarDatos()
+  constructor() {
+    this.asistencias = []
+    this.generarDatos()
+  }
+  generarDatos() {
+    const limite = 10;
+    const asistenciasEstado = ["asistio","falto","tarde"]
+    for (let i = 0; i < limite; i++) {
+      this.asistencias.push({
+        codAs: faker.datatype.uuid(),
+        fechaRegistro: faker.datatype.datetime(),
+        estadoAsistencia: asistenciasEstado[Math.floor(Math.random()*asistenciasEstado.length)]
+      });
     }
-    generarDatos() {
-        const limite = 10;
-        for (let i = 0; i < limite; i++) {
-            this.asistencias.push({
-                codRA: faker.datatype.uuid(),
-                nroSesionRA: faker.datatype.number(),
-                fechaRA: faker.datatype.datetime(),
-                horaInicio: faker.datatype.datetime(),
-                horaFin: faker.datatype.datetime(),
-                docente: faker.name.firstName(),
-                Unidad: faker.datatype.number(),
+  }
+  async create(asistencia) {
+    let nuevaAsistencia = {
+      codAs: faker.datatype.uuid(),
+      ...asistencia
+    }
+    this.asistencias.push(nuevaAsistencia)
+    return nuevaAsistencia
+  }
+  async update(id, asistencia) {
+    const posAsistencia = this.asistencias.findIndex(item => item.codAs == id)
+    if (posAsistencia === -1) {
+      throw boom.notFound("No se encuentro asistencia")
+    }
+    this.asistencias[posAsistencia] = asistencia
+    return this.asistencias[posAsistencia]
+  }
 
-            });
-        }
+  async updateParcial(id, asistenciaParcial) {
+    const posAsistencia = this.asistencias.findIndex(item => item.codAs == id)
+    if (posAsistencia === -1) {
+      throw boom.notFound("No se encuentro asistencia")
     }
-    create(asistencia) {
-      asistencia.codRA = faker.datatype.uuid();
-      this.asistencias.push(asistencia)
+    const asistencia = this.asistencias[posAsistencia]
+    this.asistencias[posAsistencia] = {
+      ...asistencia,
+      ...asistenciaParcial
     }
-    update(id, asistencia) {
-        const AsistenciaActualizar = this.findBy(id);
-        if (AsistenciaActualizar != undefined) {
-          AsistenciaActualizar.nroSesionRA = asistencia.nroSesionRA;
-          AsistenciaActualizar.fechaRA = asistencia.fechaRA;
-          AsistenciaActualizar.horaInicio = asistencia.horaInicio;
-          AsistenciaActualizar.horaFin = asistencia.horaFin;
-          AsistenciaActualizar.docente = asistencia.docente;
-          AsistenciaActualizar.Unidad = asistencia.Unidad;
+    return this.asistencias[posAsistencia]
+  }
 
-        }
-      }
-
-    delete(id) {
-      this.alumnos.splice(this.asistencias.indexOf(this.findBy(id)), 1)
+  async delete(id) {
+    const posAsistencia = this.asistencias.findIndex(item => item.codAs == id)
+    if (posAsistencia === -1) {
+      throw boom.notFound("No se encuentro asistencia")
     }
-
-    findAll() {
-      return this.asistencias
+    this.asistencias.splice(posAsistencia, 1)
+    return {
+      mensaje: 'Se elimino asistencia',
+      id
     }
+  }
 
-    findBy(id) {
-      return this.asistencias.find(element => element.codRA == id)
+  async findAll() {
+    return this.asistencias
+  }
+
+  async findBy(id) {
+    const asistencia = this.asistencias.find(item => item.codAs == id)
+    if (!asistencia) {
+      throw boom.notFound("No se encuentro asistencia")
     }
+    return asistencia
+  }
 }
 
 module.exports = AsistenciaServices;

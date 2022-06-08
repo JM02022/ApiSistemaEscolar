@@ -1,4 +1,5 @@
-const faker = require("faker")
+const faker = require("faker");
+const boom = require('@hapi/boom');
 class NotaServices {
     constructor() {
         this.notas = []
@@ -9,41 +10,66 @@ class NotaServices {
         for (let i = 0; i < limite; i++) {
             this.notas.push({
               codN: faker.datatype.uuid(),
-              unidadUno: Math.floor(Math.random() * (20 - 1)) + 1,
-              unidadDos: Math.floor(Math.random() * (20 - 1)) + 1,
-              unidadTres: Math.floor(Math.random() * (20 - 1)) + 1,
-              PromedioF:(this.unidadUno + this.unidadDos + this.unidadTres)/3,
-              alumno: faker.name.firstName(),
-              docente: faker.name.firstName()
+              nota1: Math.floor(Math.random() * (20 - 1)) + 1,
+              nota2: Math.floor(Math.random() * (20 - 1)) + 1,
+              nota3: Math.floor(Math.random() * (20 - 1)) + 1,
+              promFinal:(this.nota1 + this.nota2 + this.nota3)/3,
+
             });
         }
     }
-    create(nota) {
-        nota.codN= faker.datatype.uuid();
-        this.notas.push(nota)
+    async create(nota) {
+        let nuevaNota = {
+          codN: faker.datatype.uuid(),
+          ...nota
+        }
+        this.notas.push(nuevaNota)
+        return nuevaNota
     }
-    update(id, nota) {
-        const notasUpdate = this.findBy(id)
-        if (notasUpdate != undefined) {
-          notasUpdate.unidadUno =  nota.unidadUno
-          notasUpdate.unidadDos = nota.unidadDos
-          notasUpdate.unidadTres = nota.unidadTres
-          notasUpdate.PromedioF = nota.PromedioF
-          notasUpdate.alumno = nota.alumno
-          notasUpdate.docente = nota.docente
+    async update(id, nota) {
+        const posNota = this.notas.findIndex(item => item.codN == id)
+        if(posNota === - 1){
+            throw boom.notFound("No se encuentra la nota")
+        }
+        this.notas[posNota] = nota
+        return this.notas[posNota]
+    }
+
+    async updateParcial(id, notaParcial) {
+        const posNota = this.notas.findIndex(item => item.codN == id)
+        if(posNota === - 1){
+            throw boom.notFound("No se encuentra la nota")
+        }
+        const nota = this.notas[posNota]
+        this.notas[posNota] = {
+            ...nota,
+            ...notaParcial
+        }
+        return this.notas[posNota]
+    }
+
+    async delete(id) {
+        const posNota = this.notas.findIndex(item => item.codN == id)
+        if(posNota === - 1){
+            throw boom.notFound("No se encuentra la nota")
+        }
+        this.notas.splice(posNota,1)
+        return {
+          mensaje: 'Se elimino nota',
+          id
         }
     }
 
-    delete(id) {
-        this.notas.splice(this.notas.indexOf(this.findBy(id)), 1)
-    }
-
-    findAll() {
+    async findAll() {
         return this.notas
     }
 
-    findBy(id) {
-        return this.notas.find(element => element.codN == id) //pepito
+    async findBy(id) {
+        const nota = this.notas.find(item => item.codN == id)
+        if(!nota){
+            throw boom.notFound("No se encuentra la nota")
+        }
+        return nota
     }
 }
 

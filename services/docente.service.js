@@ -1,4 +1,5 @@
-const faker = require("faker")
+const faker = require("faker");
+const boom = require('@hapi/boom');
 class DocenteServices {
   constructor() {
     this.docentes = []
@@ -6,49 +7,75 @@ class DocenteServices {
   }
   generarDatos() {
     const limite = 10;
+    const sexoLista = ["M","F"]
     for (let i = 0; i < limite; i++) {
       this.docentes.push({
-        codigoD: faker.datatype.uuid(),
-        usuario: faker.internet.userName(),
-        contrasenia: faker.internet.password(),
-        nombre: faker.name.firstName(),
-        especialidad: Math.floor(Math.random() * (6 - 1)) + 1,
-        apellidoP: faker.name.lastName(),
-        apellidoM: faker.name.lastName(),
-        celular: faker.phone.phoneNumber,
-        correo: faker.internet.email
+        codD: faker.datatype.uuid(),
+        contraseniaD: faker.internet.password(),
+        dniD: Math.floor(Math.random() * (8 - 1)) + 1,
+        apellidoPD: faker.name.lastName(),
+        apellidoMD: faker.name.lastName(),
+        nombreD: faker.name.firstName(),
+        sexoD: sexoLista[Math.floor(Math.random()*sexoLista.length)],
+        nroCelularD: faker.phone.phoneNumber(),
+        fechaNaciD: faker.datatype.datetime(),
+        correo: faker.internet.email(),
+        direccionD: faker.address.streetSuffix()
       });
     }
   }
-  create(docente) {
-    docente.codigoD = faker.datatype.uuid();
-    this.docentes.push(docente)
+  async create(docente) {
+    const nuevoDocente = {
+      codD: faker.datatype.uuid(),
+      ...docente
+    }
+    this.docentes.push(nuevoDocente)
+    return nuevoDocente
   }
-  update(id, docente) {
-    const DocenteActualizar = this.findBy(id);
-    if (DocenteActualizar != undefined) {
-      DocenteActualizar.usuario  = docente.usuario;
-      DocenteActualizar.contrasenia = docente.contrasenia;
-      DocenteActualizar.nombre = docente.nombre;
-      DocenteActualizar.especialidad = docente.especialidad;
-      DocenteActualizar.apellidoP = docente.apellidoP;
-      DocenteActualizar.apellidoM = docente.apellidoM;
-      DocenteActualizar.celular = docente.celular;
-      DocenteActualizar.correo = docente.correo;
+  async update(id, docente) {
+    const posDocente = this.docentes.findIndex(item => item.codD == id)
+    if (posDocente === -1) {
+      throw boom.notFound("No se encuentro docente")
+    }
+    this.docentes[posDocente] = docente
+    return this.docentes[posDocente]
+  }
 
+  async updateParcial(id, docenteParcial) {
+    const posDocente = this.docentes.findIndex(item => item.codD == id)
+    if (posDocente === -1) {
+      throw boom.notFound("No se encuentro docente")
+    }
+    const docente = this.docentes[posDocente]
+    this.docentes[posDocente] = {
+      ...docente,
+      ...docenteParcial
+    }
+    return this.docentes[posDocente]
+  }
+
+  async delete(id) {
+    const posDocente = this.docentes.findIndex(item => item.codD == id)
+    if (posDocente === -1) {
+      throw boom.notFound("No se encuentro docente")
+    }
+    this.docentes.splice(posDocente, 1)
+    return {
+      mensaje: 'Se elimino docente',
+      id
     }
   }
 
-  delete(id) {
-    this.docentes.splice(this.docentes.indexOf(this.findBy(id)), 1)
-  }
-
-  findAll() {
+  async findAll() {
     return this.docentes
   }
 
-  findBy(id) {
-    return this.docentes.find(element => element.codigoD === id)
+  async findBy(id) {
+    const docente = this.docentes.find(item => item.codD == id)
+    if (!docente) {
+      throw boom.notFound("No se encuentro docente")
+    }
+    return docente
   }
 }
 
