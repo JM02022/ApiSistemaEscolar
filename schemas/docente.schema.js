@@ -11,6 +11,7 @@ const fechaNaciD = joi.date();
 const sexoD = joi.string().min(0).max(1);
 const nroCelularD = joi.string().alphanum().min(9)
 const direccionD = joi.string().alphanum().max(40)
+const foto = joi.string()
 
 const crearDocenteSchema = joi.object({
   codD: codD.required(),
@@ -23,7 +24,8 @@ const crearDocenteSchema = joi.object({
   fechaNaciD: fechaNaciD.required(),
   sexoD: sexoD.required(),
   nroCelularD: nroCelularD.required(),
-  direccionD: direccionD.required()
+  direccionD: direccionD.required(),
+  foto
 })
 
 const actualizarDocenteSchema = joi.object({
@@ -37,7 +39,8 @@ const actualizarDocenteSchema = joi.object({
   fechaNaciD,
   sexoD,
   nroCelularD,
-  direccionD
+  direccionD,
+  foto
 })
 
 const findByDocenteSchema = joi.object({

@@ -21,7 +21,8 @@ class AdministradorServices {
         sexoAd: arr[aleatorio],
         celular: (Math.floor(Math.random() * (999999999 - 400000000)) + 400000000).toString(),
         direccion: faker.address.streetAddress(),
-        correo: faker.internet.email()
+        correo: faker.internet.email(),
+        foto: faker.image.imageUrl()
       })
     }
   }

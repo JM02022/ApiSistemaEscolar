@@ -1,6 +1,7 @@
+const Joi = require('joi');
 const joi = require('joi');
 
-const idAdmi = joi.string().uuid()
+const idAdmi = joi.string().uuid();
 const contrasenia = joi.string().max(30);
 const apellidoP = joi.string().max(30);
 const apellidoM = joi.string().max(30);
@@ -10,6 +11,7 @@ const sexoAd = joi.string().min(0).max(1)
 const celular = joi.string().alphanum().min(9)
 const direccion = joi.string().max(40)
 const correo = joi.string().email().max(50);
+const foto = joi.string()
 
 const crearAdminSchema = joi.object({
   idAdmi: idAdmi.required(),
@@ -21,7 +23,8 @@ const crearAdminSchema = joi.object({
   sexoAd: sexoAd.required(),
   celular,
   direccion,
-  correo
+  correo,
+  foto
 })
 
 const actualizarAdminSchema = joi.object({
@@ -34,7 +37,8 @@ const actualizarAdminSchema = joi.object({
   sexoAd,
   celular,
   direccion,
-  correo
+  correo,
+  foto
 })
 
 // const eliminarAdminSchema = joi.object({

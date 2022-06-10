@@ -20,7 +20,8 @@ class DocenteServices {
         nroCelularD: faker.phone.phoneNumber(),
         fechaNaciD: faker.datatype.datetime(),
         correo: faker.internet.email(),
-        direccionD: faker.address.streetSuffix()
+        direccionD: faker.address.streetSuffix(),
+        foto: faker.image.imageUrl()
       });
     }
   }

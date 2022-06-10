@@ -12,7 +12,7 @@ class CursoServices {
         codigoC: faker.datatype.uuid(),
         nombre: faker.name.jobTitle(),
         descripcion: faker.lorem.sentences(),
-        imagen: faker.image.abstract()
+        imagen: faker.image.Url()
       });
     }
   }

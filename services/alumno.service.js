@@ -21,6 +21,7 @@ class AlumnoServices {
         fechaNaciA: faker.datatype.datetime(),
         sexoA: arr[aleatorio],
         direccion: faker.address.streetSuffix(),
+        foto: faker.image.imageUrl()
       });
     }
   }

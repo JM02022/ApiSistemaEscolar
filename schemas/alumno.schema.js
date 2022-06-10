@@ -9,6 +9,7 @@ const nombreA = joi.string().max(30);
 const fechaNaciA = joi.date();
 const sexoA = joi.string().min(0).max(1)
 const direccion = joi.string().alphanum().max(40)
+const foto = joi.string()
 
 const crearAlumnoSchema = joi.object({
   codA: codA.required(),
@@ -19,7 +20,8 @@ const crearAlumnoSchema = joi.object({
   nombreA: nombreA.required(),
   fechaNaciA: fechaNaciA.required(),
   sexoA: sexoA.required(),
-  direccion: direccion.required()
+  direccion: direccion.required(),
+  foto
 })
 
 const actualizarAlumnoSchema = joi.object({
@@ -31,7 +33,8 @@ const actualizarAlumnoSchema = joi.object({
   nombreA,
   fechaNaciA,
   sexoA,
-  direccion
+  direccion,
+  foto
 })
 
 const findByAlumnoSchema = joi.object({
