@@ -14,14 +14,14 @@ class AlumnoServices {
       this.alumnos.push({
         codA: faker.datatype.uuid(),
         contrasenia: faker.internet.password(),
-        dni: Math.floor(Math.random() * (99999999 - 40000000)) + 40000000,
+        dni: (Math.floor(Math.random() * (999999999 - 400000000)) + 400000000).toString(),
         apellidoP: faker.name.lastName(),
         apellidoM: faker.name.lastName(),
         nombreA: faker.name.firstName(),
         fechaNaciA: faker.datatype.datetime(),
         sexoA: arr[aleatorio],
         direccion: faker.address.streetSuffix(),
-        foto: faker.image.imageUrl()
+        // foto: faker.image.imageUrl()
       });
     }
   }
@@ -78,6 +78,18 @@ class AlumnoServices {
       throw boom.notFound("No se encuentra alumno")
     }
     return alumno
+  }
+  async login(id){
+    console.log(typeof id)
+    const alumnoLog = this.alumnos.find(item => item == id)
+    console.log(alumnoLog)
+    if(!alumnoLog){
+      throw boom.unauthorized("datos incorrectos")
+    }
+    return {
+      id: id,
+      mensaje: 'datos correctos'
+    }
   }
 }
 

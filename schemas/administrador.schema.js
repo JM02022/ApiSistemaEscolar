@@ -10,6 +10,7 @@ const dni = joi.string().alphanum().min(9)
 const sexoAd = joi.string().min(0).max(1)
 const celular = joi.string().alphanum().min(9)
 const direccion = joi.string().max(40)
+const fechaNaciA = joi.date();
 const correo = joi.string().email().max(50);
 const foto = joi.string()
 
@@ -21,14 +22,15 @@ const crearAdminSchema = joi.object({
   nombreAd: nombreAd.required(),
   dni: dni.required(),
   sexoAd: sexoAd.required(),
+  fechaNaciA: fechaNaciA.required(),
   celular,
   direccion,
   correo,
-  foto
+  // foto
 })
 
 const actualizarAdminSchema = joi.object({
-  //idAdmi: idAdmi.required(),
+  idAdmi: idAdmi.required(),
   contrasenia,
   apellidoP,
   apellidoM,
@@ -38,7 +40,7 @@ const actualizarAdminSchema = joi.object({
   celular,
   direccion,
   correo,
-  foto
+  // foto
 })
 
 // const eliminarAdminSchema = joi.object({

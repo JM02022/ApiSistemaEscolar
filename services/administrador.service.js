@@ -17,12 +17,13 @@ class AdministradorServices {
         apellidoP: faker.name.lastName(),
         apellidoM: faker.name.lastName(),
         nombreAd: faker.name.firstName(),
-        dni: (Math.floor(Math.random() * (999999999 - 400000000)) + 400000000).toString() ,
+        dni: (Math.floor(Math.random() * (9999999999 - 4000000000)) + 4000000000).toString(),
         sexoAd: arr[aleatorio],
+        fechaNaciA: faker.datatype.datetime(),
         celular: (Math.floor(Math.random() * (999999999 - 400000000)) + 400000000).toString(),
         direccion: faker.address.streetAddress(),
         correo: faker.internet.email(),
-        foto: faker.image.imageUrl()
+        // foto: faker.image.imageUrl()
       })
     }
   }

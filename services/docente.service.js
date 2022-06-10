@@ -21,7 +21,7 @@ class DocenteServices {
         fechaNaciD: faker.datatype.datetime(),
         correo: faker.internet.email(),
         direccionD: faker.address.streetSuffix(),
-        foto: faker.image.imageUrl()
+        // foto: faker.image.imageUrl()
       });
     }
   }

@@ -13,7 +13,7 @@ const crearCursoSchema = joi.object({
 })
 
 const actualizarCursoSchema = joi.object({
-  //codigoC: codigoC.required(),
+  codigoC: codigoC.required(),
   nombre,
   descripcion,
   imagen,
