@@ -83,10 +83,7 @@ router.delete('/:codigoC', controlValidar(findByCursoSchema, 'params'), async (r
   try {
     const {codigoC} = req.params
     const datoEliminado = await servicioCurso.delete(codigoC)
-    res.status(200).json({
-      mensaje: "Curso eliminado",
-      dato: datoEliminado
-    })
+    res.status(200).json(datoEliminado)
 
   } catch (error) {
     next(error)

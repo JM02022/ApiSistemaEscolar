@@ -1,6 +1,6 @@
 const joi = require('joi');
 
-const codN = joi.string().uuid()
+const codN = joi.string()
 const nota1 = joi.number().min(0).max(20)
 const nota2 = joi.number().min(0).max(20)
 const nota3= joi.number().min(0).max(20)

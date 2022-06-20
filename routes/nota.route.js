@@ -52,10 +52,7 @@ router.post('/',controlValidar(crearNotaSchema,'body') ,async(req, res,next) => 
   try {
     const body = req.body
     const nota = await servicioNota.create(body)
-    res.status(201).json({
-        mensaje: 'Registro de nota existoso',
-        datos: nota
-    })
+    res.status(201).json(nota)
   } catch (error) {
     next(error)
   }

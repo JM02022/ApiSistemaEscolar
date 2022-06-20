@@ -1,72 +1,87 @@
-const faker = require("faker")
 const boom = require('@hapi/boom');
+const {models} = require('../libs/sequelize')
 
 class AulaServices {
   constructor() {
-    this.aulas = []
-    this.generarDatos()
-  }
-  generarDatos() {
-    const limite = 10;
-    for (let i = 0; i < limite; i++) {
-      this.aulas.push({
-        codAu: faker.datatype.uuid(),
-        capacidadA: Math.floor(Math.random() * (40- 1)) + 1
-      });
-    }
+
   }
   async create(aula) {
-    let nuevaAula = {
-      codAu: faker.datatype.uuid(),
+    const {
+      codAu,
+      capacidadA,
+      numeroAula,
+      piso
+    } = aula
+    const salida = await models.aula.create(administrador)
+    return salida
+  }
+
+  async update(id, aula) {
+    const {
+      capacidadA,
+      numeroAula,
+      piso
+    } = administrador
+    const data = await models.aula.update({
+      capacidadA:capacidadA,
+      numeroAula:numeroAula,
+      piso:piso
+      },
+      {where:{codAu:id}}
+    )
+    if(data == 0){
+        throw boom.notFound('dato de aula no encontrado')
+    }
+    return {
+      codAu:id,
       ...aula
     }
-    this.aulas.push(nuevaAula)
-    return nuevaAula
-  }
-  async update(id, aula) {
-    const posAula = this.aulas.findIndex(item => item.codAu== id)
-    if (posAula === -1) {
-      throw boom.notFound("No se encuentro aula")
-    }
-    this.aulas[posAula] = aula
-    return this.aulas[posAula]
   }
 
   async updateParcial(id, aulaParcial) {
-    const posAula = this.aulas.findIndex(item => item.codAu == id)
-    if (posAula === -1) {
-      throw boom.notFound("No se encuentro aula")
+    const {
+      capacidadA,
+      numeroAula,
+      piso
+    } = aulaParcial
+    const data = await models.aula.update({
+      capacidadA:capacidadA,
+      numeroAula:numeroAula,
+      piso:piso
+      },
+      {where:{codAu:id}}
+    )
+    if(data == 0){
+        throw boom.notFound('dato de aula no encontrado')
     }
-    const aula = this.aulas[posAula]
-    this.aulas[posAula] = {
-      ...aula,
+    return {
+      codAu:id,
       ...aulaParcial
     }
-    return this.aulas[posAula]
   }
 
   async delete(id) {
-    const posAula = this.aulas.findIndex(item => item.codAu == id)
-    if (posAula === -1) {
-      throw boom.notFound("No se encuentro aula")
+    const data = await models.aula.destroy({
+      where:{codAu:id},
+    }) 
+    if(!data){
+      throw boom.notFound('dato de aula no encontrado')
     }
-    this.aulas.splice(posAula, 1)
-    return {
-      mensaje: 'Se elimino aula',
-      id
+    return{
+      mensaje:"se elimino aula"
     }
   }
 
   async findAll() {
-    return this.aulas
+    const data = await models.aula.findAll();
+    return data;
   }
-
   async findBy(id) {
-    const aula = this.aulas.find(item => item.codAu == id)
-    if (!aula) {
-      throw boom.notFound("No se encuentro aula")
+    const data = await models.aula.findByPk(id)
+    if(!data){
+      throw boom.notFound('dato de aula no encontrado')
     }
-    return aula
+    return data
   }
 }
 

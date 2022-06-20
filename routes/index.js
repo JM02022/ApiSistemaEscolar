@@ -8,7 +8,9 @@ const cursoRouter = require('./curso.route');
 const notaRouter = require('./nota.route');
 const aulaRouter = require('./aula.route');
 const asistenciaRouter = require('./asistencia.route');
-const loginRouter = require('./loginRouter.route')
+const cursoDetalleRouter = require('./cursoDetalle.route')
+const horarioRouter = require('./horario.route')
+const matriculaRouter = require('./matricula.route')
 
 // function rutas(app,ROL)
 function rutas(app) {
@@ -21,7 +23,9 @@ function rutas(app) {
     routes.use('/notas', notaRouter)
     routes.use('/aulas', aulaRouter)
     routes.use('/asistencia', asistenciaRouter)
-    routes.use('/login',loginRouter)
+    routes.use('/cursoDetalles',cursoDetalleRouter)
+    routes.use('/horarios',horarioRouter)
+    routes.use('/matriculas',matriculaRouter)
 }
 
 module.exports = rutas

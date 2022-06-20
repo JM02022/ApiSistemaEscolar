@@ -33,7 +33,7 @@ router.post('/',controlValidar(crearDocenteSchema,'body'),async (req, res, next)
     const docente = await servicioDocente.create(body)
     res.status(201).json({
       ensaje: 'Registro de docente existoso',
-      datos: body
+      datos: docente
     })
 
   } catch (error) {
@@ -82,10 +82,7 @@ router.delete('/:codD', async (req, res, next) => {
   try {
     const {codD} = req.params
     const docenteEliminado = await servicioDocente.delete(codD)
-    res.status(200).json({
-        mensaje: "Registro eliminado",
-        dato: docenteEliminado
-    })
+    res.status(200).json(docenteEliminado)
   } catch (error) {
     next(error)
   }

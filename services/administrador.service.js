@@ -1,86 +1,121 @@
-const faker = require("faker");
 const boom = require('@hapi/boom');
-
+const {models} = require('../libs/sequelize')
 class AdministradorServices {
   constructor() {
-    this.administradores = [];
-    this.generarDatos()
-  }
-  generarDatos() {
-    const limite = 5;
-    const arr = ["M", "F"]
-    for (let i = 0; i < limite; i++) {
-      var aleatorio = Math.floor(Math.random() * arr.length)
-      this.administradores.push({
-        idAdmi: faker.datatype.uuid(),
-        contrasenia: faker.internet.password(),
-        apellidoP: faker.name.lastName(),
-        apellidoM: faker.name.lastName(),
-        nombreAd: faker.name.firstName(),
-        dni: (Math.floor(Math.random() * (9999999999 - 4000000000)) + 4000000000).toString(),
-        sexoAd: arr[aleatorio],
-        fechaNaciA: faker.datatype.datetime(),
-        celular: (Math.floor(Math.random() * (999999999 - 400000000)) + 400000000).toString(),
-        direccion: faker.address.streetAddress(),
-        correo: faker.internet.email(),
-        // foto: faker.image.imageUrl()
-      })
-    }
-  }
 
+  }
   async create(administrador) {
-    let nuevoAdministrador = {
-      idAdmi: faker.datatype.uuid(),
-      ...administrador
-    }
-    this.administradores.push(nuevoAdministrador)
-    return nuevoAdministrador
+    const {
+      idAdmi,
+      contrasenia,
+      apellidoP,
+      apellidoM,
+      nombreAd,
+      dni,
+      sexoAd,
+      celular,
+      direccion,
+      correo,
+      rol
+    } = administrador
+    const salida = await models.administrador.create(administrador)
+    return salida
   }
 
   async update(id, administrador) {
-    const posAdmin = this.administradores.findIndex(item => item.idAdmi == id)
-    if (posAdmin === -1) {
-      throw boom.notFound("No se encuentra el administrador")
+    const {
+      contrasenia,
+      apellidoP,
+      apellidoM,
+      nombreAd,
+      dni,
+      sexoAd,
+      celular,
+      direccion,
+      correo,
+      rol
+    } = administrador
+    const data = await models.administrador.update({
+      contrasenia:contrasenia,
+      apellidoP:apellidoP,
+      apellidoM:apellidoM,
+      nombreAd:nombreAd,
+      dni:dni,
+      sexoAd:sexoAd,
+      celular:celular,
+      direccion:direccion,
+      correo:correo,
+      rol:rol
+      },
+      {where:{idAdmi:id}}
+    )
+    if(data == 0){
+        throw boom.notFound('dato de administrador no encontrado')
     }
-    this.administradores[posAdmin] = administrador
-    return this.administradores[posAdmin]
+    return {
+      idAdmi:id,
+      ...administrador
+    }
   }
 
-  async updateParcial(id, adminParcial) {
-    const posAdmin = this.administradores.findIndex(item => item.idAdmi == id)
-    if (posAdmin === -1) {
-      throw boom.notFound("No se encuentra el administrador")
+  async updateParcial(id, administradorParcial) {
+    const {
+      contrasenia,
+      apellidoP,
+      apellidoM,
+      nombreAd,
+      dni,
+      sexoAd,
+      celular,
+      direccion,
+      correo,
+      rol
+    } = administradorParcial
+    const data = await models.administrador.update({
+      contrasenia:contrasenia,
+      apellidoP:apellidoP,
+      apellidoM:apellidoM,
+      nombreAd:nombreAd,
+      dni:dni,
+      sexoAd:sexoAd,
+      celular:celular,
+      direccion:direccion,
+      correo:correo,
+      rol:rol
+      },
+      {where:{idAdmi:id}}
+    )
+    if(data == 0){
+        throw boom.notFound('dato de administrador no encontrado')
     }
-    const admin = this.administradores[posAdmin]
-    this.administradores[posAdmin] = {
-      ...admin,
-      ...adminParcial
+    return {
+      idAdmi:id,
+      ...administradorParcial
     }
-    return this.administradores[posAdmin]
   }
 
   async delete(id) {
-    const posAdmin = this.administradores.findIndex(item => item.idAdmi == id)
-    if (posAdmin === -1) {
-      throw boom.notFound("No se encuentra el administrador")
+    const data = await models.administrador.destroy({
+      where:{idAdmi:id},
+    }) 
+    if(!data){
+      throw boom.notFound('dato de administrador no encontrado')
     }
-    this.administradores.splice(posAdmin, 1)
-    return {
-      mensaje: 'Se elimino administrador',
-      id
+    return{
+      mensaje:"se elimino administrador"
     }
   }
 
   async findAll() {
-    return this.administradores
+    const data = await models.administrador.findAll();
+    return data;
   }
-
   async findBy(id) {
-    const administrador = this.administradores.find(item => item.idAdmi == id)
-    if (!administrador) {
-      throw boom.notFound("No se encuentra el administrador")
+    const data = await models.administrador.findByPk(id)
+    if(!data){
+      throw boom.notFound('dato de administrador no encontrado')
     }
-    return administrador
+    return data
   }
 }
 

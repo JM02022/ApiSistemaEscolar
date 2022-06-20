@@ -1,73 +1,86 @@
-const faker = require("faker");
 const boom = require('@hapi/boom');
+const {models} = require('../libs/sequelize')
 class CursoServices {
   constructor() {
-    this.cursos = []
-    this.generarDatos()
-  }
-  generarDatos() {
-    const limite = 10;
-    for (let i = 0; i < limite; i++) {
-      this.cursos.push({
-        codigoC: faker.datatype.uuid(),
-        nombre: faker.name.jobTitle(),
-        descripcion: faker.lorem.sentences(),
-        imagen: faker.image.business()
-      });
-    }
+
   }
   async create(curso) {
-    let nuevoCurso = {
-      codigoC: faker.datatype.uuid(),
+    const {
+      codigoC,
+      nombre,
+      descripcion,
+      imagen,
+    } = curso
+    const salida = await models.curso.create(curso)
+    return salida
+  }
+
+  async update(id, curso) {
+    const {
+      nombre,
+      descripcion,
+      imagen,
+    } = curso
+    const data = await models.curso.update({
+      nombre,
+      descripcion,
+      imagen,
+      },
+      {where:{codigoC:id}}
+    )
+    if(data == 0){
+        throw boom.notFound('dato de curso no encontrado')
+    }
+    return {
+      codigoC:id,
       ...curso
     }
-    this.cursos.push(nuevoCurso)
-    return nuevoCurso
-  }
-  async update(id, curso) {
-    const posCurso = this.cursos.findIndex(item => item.codigoC == id)
-    if (posCurso === -1) {
-      throw boom.notFound("No se encuentro curso")
-    }
-    this.cursos[posCurso] = curso
-    return this.cursos[posCurso]
   }
 
   async updateParcial(id, cursoParcial) {
-    const posCurso = this.cursos.findIndex(item => item.codigoC == id)
-    if (posCurso === -1) {
-      throw boom.notFound("No se encuentro curso")
+    const {
+      nombre,
+      descripcion,
+      imagen,
+    } = cursoParcial
+    const data = await models.curso.update({
+      nombre,
+      descripcion,
+      imagen,
+      },
+      {where:{codigoC:id}}
+    )
+    if(data == 0){
+        throw boom.notFound('dato de curso no encontrado')
     }
-    const curso = this.cursos[posCurso]
-    this.cursos[posCurso] = {
-      ...curso,
-      ...cursoParcial
+    return {
+      codigoC:id,
+      ...curso
     }
-    return this.cursos[posCurso]
   }
 
   async delete(id) {
-    const posCurso = this.cursos.findIndex(item => item.codigoC == id)
-    if (posCurso === -1) {
-      throw boom.notFound("No se encuentro curso")
+    const data = await models.curso.destroy({
+      where:{codigoC:id},
+    }) 
+    if(!data){
+      throw boom.notFound('dato de curso no encontrado')
     }
-    this.cursos.splice(posCurso, 1)
-    return {
-      mensaje: 'Se elimino curso',
-      id
+    return{
+      mensaje:"se elimino curso"
     }
   }
 
   async findAll() {
-    return this.cursos
+    const data = await models.curso.findAll();
+    return data;
   }
-
   async findBy(id) {
-    const curso = this.cursos.find(item => item.codigoC == id)
-    if (!curso) {
-      throw boom.notFound("No se encuentro curso")
+    const data = await models.curso.findByPk(id)
+    if(!data){
+      throw boom.notFound('dato de curso no encontrado')
     }
-    return curso
+    return data
   }
 }
 

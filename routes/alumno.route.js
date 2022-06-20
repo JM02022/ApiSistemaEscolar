@@ -2,12 +2,13 @@ const express = require("express");
 const controlValidar = require("../middlewares/validation.middleware");
 const {crearAlumnoSchema,actualizarAlumnoSchema,findByAlumnoSchema} = require("../schemas/alumno.schema")
 
+
 const alumnoService = require('../services/alumno.service');
 const servicioAlumno = new alumnoService();
 
 const router = express.Router();
 
-//METODOS GET
+
 router.get('/',async (req,res,next) =>{
   try {
     const alumnos = await servicioAlumno.findAll()
@@ -17,17 +18,20 @@ router.get('/',async (req,res,next) =>{
   }
 
 })
-//GET alumnos por id
-router.get('/:codA',controlValidar(findByAlumnoSchema,'params'),async (req,res, next) => {
+
+router.get('idAlumno',controlValidar(findByAlumnoSchema,'params'),async (req,res, next) => {
   try {
-    const {codA} = req.params
-    const alumno = await servicioAlumno.findBy(codA)
+    const {idAlumno} = req.params
+    const alumno = await servicioAlumno.findBy(idAlumno)
     res.status(200).json(alumno)
   } catch (error) {
     next(error)
   }
 
 })
+
+
+
 
 router.post('/',controlValidar(crearAlumnoSchema,'body') ,async(req, res,next) => {
   try {
@@ -43,14 +47,14 @@ router.post('/',controlValidar(crearAlumnoSchema,'body') ,async(req, res,next) =
 
 })
 
-router.put('/:codA',controlValidar(actualizarAlumnoSchema,'body'),async(req, res, next) => {//actualizacion completa
+router.put('idAlumno',controlValidar(actualizarAlumnoSchema,'body'),async(req, res, next) => {//actualizacion completa
   try {
-    const { codA } = req.params
+    const {idAlumno } = req.params
     const body = {
-      codA: codA,
+      idAlumno: idAlumno,
       ...req.body
     }
-    const alumno = await servicioAlumno.update(codA, body)
+    const alumno = await servicioAlumno.update(idAlumno, body)
     res.status(200).json({
       mensaje: 'Alumno modificado',
       datos: alumno
@@ -61,14 +65,14 @@ router.put('/:codA',controlValidar(actualizarAlumnoSchema,'body'),async(req, res
   }
 })
 
-router.patch('/:codA',controlValidar(actualizarAlumnoSchema,'body'),async (req,res,next)=> {
+router.patch('idAlumno',controlValidar(actualizarAlumnoSchema,'body'),async (req,res,next)=> {
   try {
-    const { codA } = req.params
+    const { idAlumno } = req.params
     const body = {
-      codA: codA,
+      idAlumno: idAlumno,
       ...req.body
     }
-    const alumno = await servicioAlumno.updateParcial(codA,body)
+    const alumno = await servicioAlumno.updateParcial(idAlumno,body)
     res.status(200).json({
       mensaje: 'Alumno modificado parcialmente',
       datos: alumno
@@ -80,15 +84,11 @@ router.patch('/:codA',controlValidar(actualizarAlumnoSchema,'body'),async (req,r
 
 })
 
-router.delete('/:codA',controlValidar(findByAlumnoSchema,'params'),async (req,res,next) => {
+router.delete('idAlumno',controlValidar(findByAlumnoSchema,'params'),async (req,res,next) => {
   try {
-    const {codA} = req.params
-    const alumnoEliminado = await servicioAlumno.delete(codA)
-    res.status(200).json({
-      mensaje: "Alumno eliminado",
-      dato: alumnoEliminado
-    })
-
+    const { idAlumno} = req.params
+    const alumnoEliminado = await servicioAlumno.delete(idAlumno)
+    res.status(200).json(alumnoEliminado)
   } catch (error) {
     next(error)
 

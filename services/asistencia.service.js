@@ -1,74 +1,97 @@
-const faker = require("faker")
 const boom = require('@hapi/boom');
+const {models} = require('../libs/sequelize')
 class AsistenciaServices {
-  constructor() {
-    this.asistencias = []
-    this.generarDatos()
-  }
-  generarDatos() {
-    const limite = 10;
-    const asistenciasEstado = ["asistio","falto","tarde"]
-    for (let i = 0; i < limite; i++) {
-      this.asistencias.push({
-        codAs: faker.datatype.uuid(),
-        fechaRegistro: faker.datatype.datetime(),
-        estadoAsistencia: asistenciasEstado[Math.floor(Math.random()*asistenciasEstado.length)]
-      });
-    }
-  }
+  constructor() {}
   async create(asistencia) {
-    let nuevaAsistencia = {
-      codAs: faker.datatype.uuid(),
+    const {
+      codAs,
+      fechaRegistro,
+      estadoAsistencia,
+      codD,
+      idAlumno
+    } = asistencia
+    const salida = await models.asistencia.create(asistencia)
+    return salida
+  }
+
+  async update(id, asistencia) {
+    const {
+      fechaRegistro,
+      estadoAsistencia,
+      codD,
+      idAlumno
+    } = asistencia
+    const data = await models.asistencia.update({
+      fechaRegistro:fechaRegistro,
+      estadoAsistencia:estadoAsistencia,
+      codD:codD,
+      idAlumno:idAlumno
+    }, {
+      where: {
+        codAs: id
+      }
+    })
+    if (data == 0) {
+      throw boom.notFound('asistencia no encontrada')
+    }
+    return {
+      codAs: id,
       ...asistencia
     }
-    this.asistencias.push(nuevaAsistencia)
-    return nuevaAsistencia
-  }
-  async update(id, asistencia) {
-    const posAsistencia = this.asistencias.findIndex(item => item.codAs == id)
-    if (posAsistencia === -1) {
-      throw boom.notFound("No se encuentro asistencia")
-    }
-    this.asistencias[posAsistencia] = asistencia
-    return this.asistencias[posAsistencia]
   }
 
   async updateParcial(id, asistenciaParcial) {
-    const posAsistencia = this.asistencias.findIndex(item => item.codAs == id)
-    if (posAsistencia === -1) {
-      throw boom.notFound("No se encuentro asistencia")
+    const {
+      fechaRegistro,
+      estadoAsistencia,
+      codD,
+      idAlumno
+    } = asistenciaParcial
+    const data = await models.asistencia.update({
+      fechaRegistro:fechaRegistro,
+      estadoAsistencia:estadoAsistencia,
+      codD:codD,
+      idAlumno:idAlumno
+    }, {
+      where: {
+        codAs: id
+      }
+    })
+    if (data == 0) {
+      throw boom.notFound('asistencia no encontrada')
     }
-    const asistencia = this.asistencias[posAsistencia]
-    this.asistencias[posAsistencia] = {
-      ...asistencia,
+    return {
+      codAs: id,
       ...asistenciaParcial
     }
-    return this.asistencias[posAsistencia]
   }
 
   async delete(id) {
-    const posAsistencia = this.asistencias.findIndex(item => item.codAs == id)
-    if (posAsistencia === -1) {
-      throw boom.notFound("No se encuentro asistencia")
+    const data = await models.asistencia.destroy({
+      where: {
+        codAs: id
+      },
+    })
+    if (!data) {
+      throw boom.notFound('asistencia no encontrada')
     }
-    this.asistencias.splice(posAsistencia, 1)
     return {
-      mensaje: 'Se elimino asistencia',
-      id
+      mensaje: "se elimino asistencia"
     }
   }
 
   async findAll() {
-    return this.asistencias
+    const data = await models.asistencia.findAll();
+    return data;
+  }
+  async findBy(id) {
+    const data = await models.asistencia.findByPk(id)
+    if (!data) {
+      throw boom.notFound('asistencia no encontrada')
+    }
+    return data
   }
 
-  async findBy(id) {
-    const asistencia = this.asistencias.find(item => item.codAs == id)
-    if (!asistencia) {
-      throw boom.notFound("No se encuentro asistencia")
-    }
-    return asistencia
-  }
 }
 
 module.exports = AsistenciaServices;

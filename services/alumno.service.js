@@ -1,96 +1,116 @@
-const faker = require("faker");
 const boom = require('@hapi/boom');
+const {models} = require('../libs/sequelize')
 class AlumnoServices {
-  constructor() {
-    this.alumnos = []
-    this.generarDatos()
-  }
-
-  generarDatos() {
-    const limite = 10;
-    const arr = ["M", "F"]
-    for (let i = 0; i < limite; i++) {
-      var aleatorio = Math.floor(Math.random() * arr.length)
-      this.alumnos.push({
-        codA: faker.datatype.uuid(),
-        contrasenia: faker.internet.password(),
-        dni: (Math.floor(Math.random() * (999999999 - 400000000)) + 400000000).toString(),
-        apellidoP: faker.name.lastName(),
-        apellidoM: faker.name.lastName(),
-        nombreA: faker.name.firstName(),
-        fechaNaciA: faker.datatype.datetime(),
-        sexoA: arr[aleatorio],
-        direccion: faker.address.streetSuffix(),
-        // foto: faker.image.imageUrl()
-      });
-    }
-  }
-
+  constructor() {}
   async create(alumno) {
-    let nuevoAlumno = {
-      codA: faker.datatype.uuid(),
+    const {
+      idAlumno,
+      contrasenia,
+      dni,
+      apellidoP,
+      apellidoM,
+      nombre,
+      fechaNacimiento,
+      sexoA,
+      direccion,
+      nroNumeroCelular
+    } = alumno
+    const salida = await models.alumno.create(alumno)
+    return salida
+  }
+
+  async update(id, alumno) {
+    const {
+      contrasenia,
+      dni,
+      apellidoP,
+      apellidoM,
+      nombre,
+      fechaNacimiento,
+      sexoA,
+      direccion,
+      nroNumeroCelular
+    } = alumno
+    const data = await models.alumno.update({
+      contrasenia:contrasenia,
+      dni:dni,
+      apellidoP:apellidoP,
+      apellidoM:apellidoM,
+      nombre:nombre,
+      fechaNacimiento:fechaNacimiento,
+      sexoA:sexoA,
+      direccion:direccion,
+      nroNumeroCelular:nroNumeroCelular
+    },{where: {idAlumno: id}
+    })
+    if (data == 0) {
+      throw boom.notFound('alumno no encontrado')
+    }
+    return {
+      idAlumno: id,
       ...alumno
     }
-    this.alumnos.push(nuevoAlumno)
-    return nuevoAlumno
-  }
-  async update(id, alumno) {
-    const posAlumno = this.alumnos.findIndex(item => item.codA == id)
-    if (posAlumno === -1) {
-      throw boom.notFound("No se encuentra alumno")
-    }
-    this.alumnos[posAlumno] = alumno
-    return this.alumnos[posAlumno]
   }
 
   async updateParcial(id, alumnoParcial) {
-    const posAlumno = this.alumnos.findIndex(item => item.codA == id)
-    if (posAlumno === -1) {
-      throw boom.notFound("No se encuentra alumno")
+    const {
+      contrasenia,
+      dni,
+      apellidoP,
+      apellidoM,
+      nombre,
+      fechaNacimiento,
+      sexoA,
+      direccion,
+      nroNumeroCelular
+    } = alumnoParcial
+    const data = await models.alumno.update({
+      contrasenia:contrasenia,
+      dni:dni,
+      apellidoP:apellidoP,
+      apellidoM:apellidoM,
+      nombre:nombre,
+      fechaNacimiento:fechaNacimiento,
+      sexoA:sexoA,
+      direccion:direccion,
+      nroNumeroCelular:nroNumeroCelular
+    },{where: {idAlumno: id}
+    })
+    if (data == 0) {
+      throw boom.notFound('alumno no encontrado')
     }
-    const alumno = this.alumnos[posAlumno]
-    this.alumnos[posAlumno] = {
-      ...alumno,
+    return {
+      idAlumno: id,
       ...alumnoParcial
     }
-    return this.alumnos[posAlumno]
   }
 
   async delete(id) {
-    const posAlumno = this.alumnos.findIndex(item => item.codA == id)
-    if (posAlumno === -1) {
-      throw boom.notFound("No se encuentra alumno")
+    const data = await models.alumno.destroy({
+      where: {
+        idAlumno: id
+      }
+    })
+    if (!data) {
+      throw boom.notFound('Alumno no encontrado')
     }
-    this.alumnos.splice(posAlumno, 1)
     return {
-      mensaje: 'Se elimino alumno',
-      id
+      mensaje: "Se elimino alumno"
     }
   }
 
   async findAll() {
-    return this.alumnos
+    const data = await models.alumno.findAll();
+    return data;
+  }
+  async findBy(id) {
+    const data = await models.alumno.findByPk(id)
+    if (!data) {
+      throw boom.notFound('Alumno no encontrado')
+    }
+    return data
   }
 
-  async findBy(id) {
-    const alumno = this.alumnos.find(item => item.codA == id)
-    if (!alumno) {
-      throw boom.notFound("No se encuentra alumno")
-    }
-    return alumno
-  }
-  async login(id){
-    console.log(typeof id)
-    const alumnoLog = this.alumnos.find(item => item == id)
-    console.log(alumnoLog)
-    if(!alumnoLog){
-      throw boom.unauthorized("datos incorrectos")
-    }
-    return {
-      id: id,
-      mensaje: 'datos correctos'
-    }
-  }
 }
 
 module.exports = AlumnoServices

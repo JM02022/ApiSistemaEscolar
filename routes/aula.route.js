@@ -74,10 +74,7 @@ router.delete('/:codAu',controlValidar(findByAulaSchema,'params'),async (req,res
     try {
         const {codAu} = req.params
         const aulaEliminado = await servicioAula.delete(codAu)
-        res.status(200).json({
-            mensaje: "Registro eliminado",
-            dato: aulaEliminado
-        })
+        res.status(200).json(aulaEliminado)
 
     } catch (error) {
         next(error)

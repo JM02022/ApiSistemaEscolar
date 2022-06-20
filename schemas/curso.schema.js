@@ -1,6 +1,6 @@
 const joi = require('joi');
 
-const codigoC = joi.string().uuid()
+const codigoC = joi.string()
 const nombre = joi.string().max(30)
 const descripcion = joi.string().max(50);
 const imagen = joi.string().max(50);
@@ -13,7 +13,6 @@ const crearCursoSchema = joi.object({
 })
 
 const actualizarCursoSchema = joi.object({
-  codigoC: codigoC.required(),
   nombre,
   descripcion,
   imagen,

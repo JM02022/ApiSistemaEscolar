@@ -68,10 +68,7 @@ router.delete('/:codAs', controlValidar(findByAsistenciaSchema,'params'),async (
 
     const {codAs} = req.params
     const datoEliminado = await servicioAsistencias.delete(codAs)
-    res.status(200).json({
-      mensaje: "Registro eliminado",
-      dato: datoEliminado
-    })
+    res.status(200).json(datoEliminado)
 
   } catch (error) {
     next(error)
