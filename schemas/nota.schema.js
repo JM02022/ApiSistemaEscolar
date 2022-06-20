@@ -1,17 +1,21 @@
 const joi = require('joi');
 
-const codN = joi.string()
+const idNota = joi.string()
 const nota1 = joi.number().min(0).max(20)
 const nota2 = joi.number().min(0).max(20)
 const nota3= joi.number().min(0).max(20)
-const promFinal = joi.number().min(0).max(20)
+const promedio = joi.number().min(0).max(20)
+const idAlumno = joi.string().min(1)
+const idCursoDetalle = joi.string().min(1)
 
 const crearNotaSchema = joi.object({
-    codN: codN.required(),
+    idNota: idNota.required(),
     nota1: nota1.required(),
     nota2: nota2.required(),
     nota3: nota3.required(),
-    promFinal: promFinal.required(),
+    promedio: promedio.required(),
+    idAlumno: idAlumno.required(),
+    idCursoDetalle: idCursoDetalle
 
 })
 
@@ -20,12 +24,14 @@ const actualizarNotaSchema = joi.object({
     nota1,
     nota2,
     nota3,
-    promFinal,
+    promedio,
+    idAlumno,
+    idCursoDetalle
 
 })
 
 const findByNotaSchema = joi.object({
-    codN: codN.required()
+    idNota: idNota.required()
 })
 
 module.exports = {crearNotaSchema,actualizarNotaSchema,findByNotaSchema}

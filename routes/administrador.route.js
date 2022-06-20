@@ -53,7 +53,7 @@ router.put('/:idAdmi',controlValidar(actualizarAdminSchema,'body'),async (req, r
         }
         const administrador = await servicioAdministrador.update(idAdmi, body)
         res.status(200).json({
-            mensaje: 'Curso modificado',
+            mensaje: 'Administrador modificado',
             datos: administrador
         })
 

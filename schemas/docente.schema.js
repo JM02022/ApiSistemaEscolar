@@ -3,8 +3,8 @@ const joi = require('joi');
 const codD = joi.string()
 const contraseniaD = joi.string()
 const dniD = joi.string().alphanum().min(9)
-const apellidoPD = joi.string().max(30);
-const apellidoMD = joi.string().max(30);
+const apellidoP = joi.string().max(30);
+const apellidoM = joi.string().max(30);
 const nombreD = joi.string().max(30);
 const correo = joi.string().email().max(30)
 const fechaNaciD = joi.date();
@@ -18,8 +18,8 @@ const crearDocenteSchema = joi.object({
   codD: codD.required(),
   contraseniaD: contraseniaD.required(),
   dniD: dniD.required(),
-  apellidoPD: apellidoPD.required(),
-  apellidoMD: apellidoMD.required(),
+  apellidoP: apellidoP.required(),
+  apellidoM: apellidoM.required(),
   nombreD: nombreD.required(),
   correo: correo.required(),
   fechaNaciD: fechaNaciD.required(),
@@ -34,8 +34,8 @@ const actualizarDocenteSchema = joi.object({
   //codD: codD.required(),
   contraseniaD,
   dniD,
-  apellidoPD,
-  apellidoMD,
+  apellidoP,
+  apellidoM,
   nombreD,
   correo,
   fechaNaciD,

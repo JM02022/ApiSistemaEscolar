@@ -17,9 +17,11 @@ const crearMatriculaSchema = joi.object({
 })
 
 const actualizarMatriculaSchema = joi.object({
-  idMatricula: idMatricula.required(),
   fecha,
   pagoMatricula,
+  idGrado,
+  idAlumno,
+  idAdmi
 })
 
 const findByMatriculaSchema = joi.object({

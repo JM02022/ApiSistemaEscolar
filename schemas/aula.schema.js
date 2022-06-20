@@ -13,7 +13,6 @@ const crearAulaSchema = joi.object({
 })
 
 const actualizarAulaSchema = joi.object({
-    //codAu: codAu.required(),
     capacidadA,
     numeroAula,
     piso

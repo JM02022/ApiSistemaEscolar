@@ -35,7 +35,7 @@ router.get('/:codAu',controlValidar(findByAulaSchema,'params'), async (req,res, 
 
 })
 
-router.post('/', controlValidar(crearAulaSchema, 'body'), async (req, res, netx) => {
+router.post('/', controlValidar(crearAulaSchema, 'body'), async (req, res, next) => {
     try {
         const body = req.body
         const aula = await servicioAula.create(body)

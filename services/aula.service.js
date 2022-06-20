@@ -12,7 +12,7 @@ class AulaServices {
       numeroAula,
       piso
     } = aula
-    const salida = await models.aula.create(administrador)
+    const salida = await models.aula.create(aula)
     return salida
   }
 
@@ -21,7 +21,7 @@ class AulaServices {
       capacidadA,
       numeroAula,
       piso
-    } = administrador
+    } = aula
     const data = await models.aula.update({
       capacidadA:capacidadA,
       numeroAula:numeroAula,

@@ -16,10 +16,10 @@ router.get('/',async (req,res,next)=>{
   }
 })
 //GET alumnos por id
-router.get('/:codN',controlValidar(findByNotaSchema,'params'),async(req,res,next)=>{
+router.get('/:idNota',controlValidar(findByNotaSchema,'params'),async(req,res,next)=>{
   try {
-    const {codN} = req.params
-    const nota = await servicioNota.findBy(codN)
+    const {idNota} = req.params
+    const nota = await servicioNota.findBy(idNota)
     res.status(200).json(nota)
 
   } catch (error) {
@@ -28,14 +28,14 @@ router.get('/:codN',controlValidar(findByNotaSchema,'params'),async(req,res,next
 
 })
 
-router.patch('/:codN',controlValidar(actualizarNotaSchema,'body'),async(req,res,next) =>{
+router.patch('/:idNota',controlValidar(actualizarNotaSchema,'body'),async(req,res,next) =>{
   try {
-    const {codN} = req.params
+    const {idNota} = req.params
     const body = {
-      codN: codN,
+      idNota: idNota,
       ...req.body
     }
-    const nota = await servicioNota.updateParcial(codN,body)
+    const nota = await servicioNota.updateParcial(idNota,body)
     res.status(200).json({
       mensaje: 'Nota modificada',
       datos: nota
@@ -57,6 +57,18 @@ router.post('/',controlValidar(crearNotaSchema,'body') ,async(req, res,next) => 
     next(error)
   }
 
+})
+
+router.delete('/:idNota',controlValidar(findByNotaSchema,'params'), async(req,res,next) => {
+  try {
+    const {
+      idNota
+    } = req.params
+    const eliminarNota = await servicioNota.delete(idNota)
+    res.status(200).json(eliminarNota)
+  } catch (error) {
+    next(error)
+  }
 })
 
 module.exports = router

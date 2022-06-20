@@ -8,8 +8,8 @@ class DocenteServices {
     const {
       codD,
       contraseniaD,
-      apellidoPD,
-      apellidoMD,
+      apellidoP,
+      apellidoM,
       nombreD,
       correo,
       fechaNaciD,
@@ -25,8 +25,8 @@ class DocenteServices {
   async update(id, docente) {
     const {
       contraseniaD,
-      apellidoPD,
-      apellidoMD,
+      apellidoP,
+      apellidoM,
       nombreD,
       correo,
       fechaNaciD,
@@ -37,8 +37,8 @@ class DocenteServices {
     } = docente
     const data = await models.docente.update({
       contraseniaD:contraseniaD,
-      apellidoPD:apellidoPD,
-      apellidoMD:apellidoMD,
+      apellidoP:apellidoP,
+      apellidoM:apellidoM,
       nombreD:nombreD,
       correo:correo,
       fechaNaciD:fechaNaciD,
@@ -61,8 +61,8 @@ class DocenteServices {
   async updateParcial(id, docenteParcial) {
     const {
       contraseniaD,
-      apellidoPD,
-      apellidoMD,
+      apellidoP,
+      apellidoM,
       nombreD,
       correo,
       fechaNaciD,
@@ -73,8 +73,8 @@ class DocenteServices {
     } = docenteParcial
     const data = await models.docente.update({
       contraseniaD:contraseniaD,
-      apellidoPD:apellidoPD,
-      apellidoMD:apellidoMD,
+      apellidoP:apellidoP,
+      apellidoM:apellidoM,
       nombreD:nombreD,
       correo:correo,
       fechaNaciD:fechaNaciD,

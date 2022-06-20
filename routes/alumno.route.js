@@ -19,7 +19,7 @@ router.get('/',async (req,res,next) =>{
 
 })
 
-router.get('idAlumno',controlValidar(findByAlumnoSchema,'params'),async (req,res, next) => {
+router.get('/:idAlumno',controlValidar(findByAlumnoSchema,'params'),async (req,res, next) => {
   try {
     const {idAlumno} = req.params
     const alumno = await servicioAlumno.findBy(idAlumno)
@@ -47,7 +47,7 @@ router.post('/',controlValidar(crearAlumnoSchema,'body') ,async(req, res,next) =
 
 })
 
-router.put('idAlumno',controlValidar(actualizarAlumnoSchema,'body'),async(req, res, next) => {//actualizacion completa
+router.put('/:idAlumno',controlValidar(actualizarAlumnoSchema,'body'),async(req, res, next) => {//actualizacion completa
   try {
     const {idAlumno } = req.params
     const body = {
@@ -65,7 +65,7 @@ router.put('idAlumno',controlValidar(actualizarAlumnoSchema,'body'),async(req, r
   }
 })
 
-router.patch('idAlumno',controlValidar(actualizarAlumnoSchema,'body'),async (req,res,next)=> {
+router.patch('/:idAlumno',controlValidar(actualizarAlumnoSchema,'body'),async (req,res,next)=> {
   try {
     const { idAlumno } = req.params
     const body = {
@@ -84,7 +84,7 @@ router.patch('idAlumno',controlValidar(actualizarAlumnoSchema,'body'),async (req
 
 })
 
-router.delete('idAlumno',controlValidar(findByAlumnoSchema,'params'),async (req,res,next) => {
+router.delete('/:idAlumno',controlValidar(findByAlumnoSchema,'params'),async (req,res,next) => {
   try {
     const { idAlumno} = req.params
     const alumnoEliminado = await servicioAlumno.delete(idAlumno)

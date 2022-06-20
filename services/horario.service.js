@@ -9,7 +9,7 @@ class HorarioServices {
             codAu,
             idGrado
         } = horario
-        const salida = await models.horario.create(administrador)
+        const salida = await models.horario.create(horario)
         return salida
       }
     

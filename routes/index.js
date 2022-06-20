@@ -11,7 +11,7 @@ const asistenciaRouter = require('./asistencia.route');
 const cursoDetalleRouter = require('./cursoDetalle.route')
 const horarioRouter = require('./horario.route')
 const matriculaRouter = require('./matricula.route')
-
+const gradosRouter = require('./grado.router')
 // function rutas(app,ROL)
 function rutas(app) {
     const routes = express.Router()
@@ -26,6 +26,7 @@ function rutas(app) {
     routes.use('/cursoDetalles',cursoDetalleRouter)
     routes.use('/horarios',horarioRouter)
     routes.use('/matriculas',matriculaRouter)
+    routes.use('/grados',gradosRouter)
 }
 
 module.exports = rutas

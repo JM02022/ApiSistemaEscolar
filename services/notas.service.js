@@ -6,11 +6,13 @@ class NotaServices {
     }
     async create(nota) {
         const {
-            codN,
+            idNota,
             nota1,
             nota2,
             nota3,
-            promFinal,
+            promedio,
+            idAlumno,
+            idCursoDetalle
         } = nota
         const salida = await models.nota.create(nota)
         return salida
@@ -21,21 +23,25 @@ class NotaServices {
         nota1,
         nota2,
         nota3,
-        promFinal,
+        promedio,
+        idAlumno,
+        idCursoDetalle
       } = nota
       const data = await models.nota.update({
         nota1,
         nota2,
         nota3,
-        promFinal,
+        promedio,
+        idAlumno,
+        idCursoDetalle
         },
-        {where:{codN:id}}
+        {where:{idNota:id}}
       )
       if(data == 0){
           throw boom.notFound('dato de curso no encontrado')
       }
       return {
-        codN:id,
+        idNota:id,
         ...nota
       }
     }
@@ -45,28 +51,32 @@ class NotaServices {
         nota1,
         nota2,
         nota3,
-        promFinal,
+        promedio,
+        idAlumno,
+        idCursoDetalle
       } = notaParcial
       const data = await models.nota.update({
         nota1,
         nota2,
         nota3,
-        promFinal,
+        promedio,
+        idAlumno,
+        idCursoDetalle
         },
-        {where:{codN:id}}
+        {where:{idNota:id}}
       )
       if(data == 0){
           throw boom.notFound('dato de nota no encontrado')
       }
       return {
-        codN:id,
+        idNota:id,
         ...notaParcial
       }
     }
   
     async delete(id) {
       const data = await models.nota.destroy({
-        where:{codigoC:id},
+        where:{idNota:id},
       }) 
       if(!data){
         throw boom.notFound('dato de nota no encontrado')

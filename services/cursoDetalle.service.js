@@ -56,7 +56,7 @@ class cursoDetalleServices {
 
   async delete(id) {
     const data = await models.cursoDetalle.destroy({
-      where:{idAdmi:id},
+      where:{idCursoDetalle:id},
     }) 
     if(!data){
       throw boom.notFound('curso Detalle no encontrado')

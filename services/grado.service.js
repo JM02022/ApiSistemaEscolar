@@ -14,11 +14,11 @@ class GradoServices {
 
   async update(id, grado) {
     const {
-      nroGrado
+      nrogrado
     } = grado
 
     const data = await models.grado.update({
-      nroGrado: nroGrado
+      nrogrado: nrogrado
     },{where: {idGrado:id}
     })
 
@@ -34,11 +34,11 @@ class GradoServices {
 
   async updateParcial(id, gradoParcial) {
     const {
-      nroGrado
+      nrogrado
     } = gradoParcial
 
     const data = await models.grado.update({
-      nroGrado: nroGrado
+      nrogrado: nrogrado
     },{where: {idGrado:id}
     })
 

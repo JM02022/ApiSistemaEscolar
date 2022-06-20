@@ -2,7 +2,7 @@ const Joi = require('joi');
 const joi = require('joi');
 
 const idHorario = joi.string();
-const hora = joi.number().max(30);
+const hora = joi.string();
 const idCursoDetalle = joi.string() 
 const codAu = joi.string()
 const idGrado = joi.string()

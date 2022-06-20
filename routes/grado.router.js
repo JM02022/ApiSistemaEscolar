@@ -55,7 +55,7 @@ router.put('/:idGrado', controlValidar(actualizarGradoSchema, 'body'), async (re
       idGrado: idGrado,
       ...req.body
     }
-    const grado = await servicioAlumno.update(idGrado, body)
+    const grado = await servicioGrado.update(idGrado, body)
     res.status(200).json({
       mensaje: 'Grado modificado',
       datos: grado
@@ -71,7 +71,7 @@ router.delete('/:idGrado', controlValidar(findByGradoSchema, 'params'), async (r
     const {
       idGrado
     } = req.params
-    const gradoEliminado = await servicioAlumno.delete(idGrado)
+    const gradoEliminado = await servicioGrado.delete(idGrado)
     res.status(200).json(gradoEliminado)
   } catch (error) {
     next(error)

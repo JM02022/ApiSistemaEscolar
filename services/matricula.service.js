@@ -12,7 +12,7 @@ class MatriculaServices {
       idAlumno,
       idAdmi
     } = matricula
-    const salida = await models.curso.create(matricula)
+    const salida = await models.matricula.create(matricula)
     return salida
   }
 
