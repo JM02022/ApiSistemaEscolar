@@ -20,7 +20,7 @@ const crearNotaSchema = joi.object({
 })
 
 const actualizarNotaSchema = joi.object({
-    //codN: codN.required(),
+    idNota,
     nota1,
     nota2,
     nota3,

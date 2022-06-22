@@ -13,6 +13,7 @@ const crearAulaSchema = joi.object({
 })
 
 const actualizarAulaSchema = joi.object({
+    codAu,
     capacidadA,
     numeroAula,
     piso

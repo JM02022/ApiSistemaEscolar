@@ -15,6 +15,7 @@ const crearAsistenciaSchema = joi.object({
 })
 
 const actualizarAsistenciaSchema = joi.object({
+    codAs,
     fechaRegistro,
     estadoAsistencia,
     codD,

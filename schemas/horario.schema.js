@@ -16,6 +16,7 @@ const crearHorarioSchema = joi.object({
 })
 
 const actualizarHorarioSchema = joi.object({
+    idHorario,
     hora,
     idCursoDetalle,
     codAu,

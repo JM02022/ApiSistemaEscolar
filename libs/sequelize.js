@@ -5,7 +5,7 @@ const user = 'postgres';//cada uno pone su user
 const host = 'localhost';   
 const port = 5432;
 const password = '1234'//cada uno pone su password
-const database = 'dbColegio'
+const database = 'm001'
 
 const USUARIO = encodeURIComponent(user)
 const PASSWORD = encodeURIComponent(password)

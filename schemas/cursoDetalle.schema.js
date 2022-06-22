@@ -10,6 +10,7 @@ const crearCursoDetalle = joi.object({
 })
 
 const actualizarCursoDetalleSchema = joi.object({
+    idCursoDetalle,
     codigoC,
     codD
 })

@@ -10,7 +10,7 @@ const correo = joi.string().email().max(30)
 const fechaNaciD = joi.date();
 const sexoD = joi.string().min(0).max(1);
 const nroCelularD = joi.string().alphanum().min(9)
-const direccionD = joi.string().alphanum().max(40)
+const direccionD = joi.string().max(40)
 const rol = joi.string().min(0).max(1);
 // const foto = joi.string()
 
@@ -31,7 +31,7 @@ const crearDocenteSchema = joi.object({
 })
 
 const actualizarDocenteSchema = joi.object({
-  //codD: codD.required(),
+  codD,
   contraseniaD,
   dniD,
   apellidoP,

@@ -8,7 +8,7 @@ const apellidoM = joi.string().max(30);
 const nombre = joi.string().max(30);
 const fechaNacimiento = joi.date();
 const sexoA = joi.string().min(0).max(1);
-const direccion = joi.string().alphanum().max(40);
+const direccion = joi.string().max(40);
 const nroNumeroCelular = joi.string().alphanum().min(9);
 
 const crearAlumnoSchema = joi.object({
@@ -26,6 +26,7 @@ const crearAlumnoSchema = joi.object({
 })
 
 const actualizarAlumnoSchema = joi.object({
+  idAlumno,
   contrasenia,
   dni,
   apellidoP,

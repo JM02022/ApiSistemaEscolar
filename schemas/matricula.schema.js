@@ -17,6 +17,7 @@ const crearMatriculaSchema = joi.object({
 })
 
 const actualizarMatriculaSchema = joi.object({
+  idMatricula,
   fecha,
   pagoMatricula,
   idGrado,
